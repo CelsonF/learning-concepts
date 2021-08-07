@@ -6,11 +6,11 @@
     <br />
     <br />
 
-    <input type="text" v-focus v-model="currentTask" @keyup.enter="addTask" />
+    <input type="text" v-focus v-model="state.currentTask" @keyup.enter="addTask" />
 
-    <ul v-if="showList">
+    <ul v-if="state.showList">
       <li
-        v-for="(task, index) in tasks"
+        v-for="(task, index) in state.tasks"
         :key="`${task}-${index}`"
         :class="{
           'line-through': task.isDone,
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import {reactive} from 'vue'
+
 const focus = {
   inserted: (el) => {
     el.focus();
@@ -36,37 +38,51 @@ const focus = {
 
 export default {
   directives: {
-    focus,
+    focus
   },
-  data: () => ({
-    currentTask: "",
-    showList: false,
-    tasks: [{ name: "Make curse", isDone: false }],
-  }),
-  methods: {
-    handleShowHideList() {
-      this.showList = !this.showList;
-    },
-    complete(task) {
-      this.tasks = this.tasks.map((t) => {
+  setup() {
+    const state = reactive({
+      currentTask: "",
+      showList: false,
+      tasks: [
+        { name: "Make curse", isDone: false }
+        ]
+    })
+    
+    function handleShowHideList () {
+      state.showList = !state.showList;
+    }
+
+    function complete (task) {
+      state.tasks = state.tasks.map((t) => {
         if (t.name === task.name) {
           return { ...t, isDone: !t.isDone };
         }
         return { ...t };
       });
-    },
-    addTask() {
-      this.tasks.push({
-        name: this.currentTask,
+    }
+
+    function addTask () {
+      state.tasks.push({
+        name: state.currentTask,
         isDone: false,
       });
-      this.currentTask = "";
-    },
-    remove(task) {
-      this.tasks = this.tasks.filter((t) => t.name !== task.name);
-    },
-  },
-};
+      state.currentTask = "";
+    }
+
+    function remove (task) {
+      state.tasks = state.tasks.filter((t) => t.name !== task.name);
+    }
+
+    return {
+      state,
+      handleShowHideList,
+      complete,
+      remove,
+      addTask
+    }
+  }
+}
 </script>
 
 <style scoped>
