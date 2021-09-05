@@ -33,3 +33,4 @@
    Usando diretiva v-model você consegue fazer um Two-way data binding vinculando o que estiver no data() com o que está na view usando interpolação de Mustache {{}}
 
 3. #### Diretivas
+fghfgh
