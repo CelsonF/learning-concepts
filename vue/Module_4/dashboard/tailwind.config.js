@@ -1,5 +1,5 @@
 const colors = require('tailwindcss/colors')
-const palette = require('./palette')
+const palette = require('./src/assets/palette/index')
 
 module.exports = {
   purge: [],
